@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang on </title>
-    <link>http://tenderleo.github.io/tags/golang/index.xml</link>
+    <link>http://coderzh.github.io/tags/golang/index.xml</link>
     <description>Recent content in Golang on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="http://tenderleo.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://coderzh.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>my2nd</title>
-      <link>http://tenderleo.github.io/post/my2nd/</link>
+      <link>http://coderzh.github.io/post/my2nd/</link>
       <pubDate>Sat, 18 Feb 2017 01:58:59 -0800</pubDate>
       
-      <guid>http://tenderleo.github.io/post/my2nd/</guid>
+      <guid>http://coderzh.github.io/post/my2nd/</guid>
       <description></description>
     </item>
     
