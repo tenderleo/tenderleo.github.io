@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43; on </title>
+    <link>http://tenderleo.github.io/categories/c&#43;&#43;/index.xml</link>
+    <description>Recent content in C&#43;&#43; on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="http://tenderleo.github.io/categories/c&#43;&#43;/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>initializer[dcl.init]</title>
+      <link>http://tenderleo.github.io/post/braced_initialization/</link>
+      <pubDate>Mon, 20 Feb 2017 23:15:01 -0800</pubDate>
+      
+      <guid>http://tenderleo.github.io/post/braced_initialization/</guid>
+      <description>&lt;p&gt;&lt;b&gt;According&lt;/b&gt; [8.2], C++&amp;rsquo;s resolution policy will prefer to consider any construct
+that could possibly be a declaration a declaration. thus the following statement&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #cccccc&#34;&gt;Object&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;object(&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;());&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;will be consider a function declaration, instead of creating a new object, even the
+code intends to create one. This is so-called &lt;code&gt;C++&#39;s most vexing parsing&lt;/code&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
