@@ -6,8 +6,249 @@
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 20 Feb 2017 23:15:01 -0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Feb 2017 21:32:54 -0800</lastBuildDate>
     <atom:link href="https://tenderleo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>your own printf</title>
+      <link>https://tenderleo.github.io/post/printf/</link>
+      <pubDate>Mon, 27 Feb 2017 21:32:54 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/printf/</guid>
+      <description>
+
+&lt;h4 id=&#34;library-to-build-printf&#34;&gt;library to build printf&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;printf&lt;/code&gt; using several function defined inside &lt;strong&gt;stdarg.h&lt;/strong&gt; to build a string on
+stack, interleaving the string format with your data.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;__printf(&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;format,&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;...)&lt;/span&gt;
+&lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt;
+  &lt;span style=&#34;color: #00cd00&#34;&gt;va_list&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;arg;&lt;/span&gt;
+  &lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;done;&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;va_start(arg,&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;format);&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;done&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;vfprintf(stdout,&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;format,&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;arg);&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;va_end(list);&lt;/span&gt;
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;done;&lt;/span&gt;
+&lt;span style=&#34;color: #cccccc&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h5 id=&#34;va-list&#34;&gt;va_list&lt;/h5&gt;
+
+&lt;p&gt;the object will hold the list of additional arguments of the function. it will be
+empty until you initialize it with va_start.&lt;/p&gt;
+
+&lt;h5 id=&#34;va-start-typename-format&#34;&gt;va_start(typename format, &amp;hellip;)&lt;/h5&gt;
+
+&lt;p&gt;va_start initializes an object of this type in such a way that subsequent calls
+to va_arg sequentially retrieve the additional arguments passed to the function.&lt;/p&gt;
+
+&lt;p&gt;the argument before the variadic arguments starts will function at flag to tell
+va_start after the argument, the argument list start. it can be a format string
+as for &lt;code&gt;printf&lt;/code&gt;, or if the arguments are all the same, use count as the argument
+to indicate size of the list.&lt;/p&gt;
+
+&lt;h5 id=&#34;va-arg&#34;&gt;va_arg&lt;/h5&gt;
+
+&lt;p&gt;this function require type of the indexed argument to be specified.&lt;/p&gt;
+
+&lt;h5 id=&#34;va-end&#34;&gt;va_end&lt;/h5&gt;
+
+&lt;p&gt;after done with va_list object, you need call va_end to pair with va_start.&lt;/p&gt;
+
+&lt;h4 id=&#34;print-into-file-string&#34;&gt;print into file/string.&lt;/h4&gt;
+
+&lt;p&gt;vfprintf vsprintf&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SFINAE and std::enable_if</title>
+      <link>https://tenderleo.github.io/post/SFINAE/</link>
+      <pubDate>Sat, 25 Feb 2017 23:52:34 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/SFINAE/</guid>
+      <description>
+
+&lt;h4 id=&#34;sfinae&#34;&gt;SFINAE&lt;/h4&gt;
+
+&lt;p&gt;SFINAE is language feature/idiom short for &lt;code&gt;Substitution failure is not an error.&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;In the process of template argument deduction, C++ compiler will try its best to initiate signatures of candidate overloaded function to make sure it finds the best/exact overloaded one function signature.&lt;/p&gt;
+
+&lt;p&gt;In this process, if an invalid argument/return type is formed, this instantiation is removed from the resolution result set. As long as there is at least one instantiation instance exists in the resolution set, the compiler won&amp;rsquo;t fail the compiling process.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #00cd00&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;multiply(&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;x,&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;y)&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color: #cdcd00&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;y;}&lt;/span&gt;
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;typename&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;typename&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;multiply(T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;t1,&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;t2)&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #cdcd00&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;t1&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;t2;&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;}&lt;/span&gt;
+
+  &lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;main&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color: #cccccc&#34;&gt;multiply(&lt;/span&gt;&lt;span style=&#34;color: #cd00cd&#34;&gt;5&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #cd00cd&#34;&gt;5&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;);&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;in the above code, it is clear that first overload of &lt;code&gt;multiply&lt;/code&gt; is a perfect match for this resolution process, however, the compiler will still try to instantiate the second function template to make sure a better match exists or not. in this case, there is no such &lt;code&gt;int::result&lt;/code&gt; defined, therefore template instantiation failed to carry out any result. &lt;strong&gt;SFINAE&lt;/strong&gt; is used to determine properties of types at compile-time.&lt;/p&gt;
+
+&lt;h4 id=&#34;std-enable-if&#34;&gt;std::enable_if&lt;/h4&gt;
+
+&lt;p&gt;Its definition looks like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;B,&lt;/span&gt; &lt;span style=&#34;color: #cdcd00&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color: #00cdcd&#34;&gt;T&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;enable_if;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;std::enable_if has a public member typedef type, equal to T; otherwise, there is no member typedef.&lt;/p&gt;
+
+&lt;p&gt;This metafunction is a convenient way to leverage &lt;code&gt;SFINAE&lt;/code&gt; to conditionally remove functions from overload resolution based on type traits and to provide separate function overloads and specializations for different type traits. std::enable_if can be used as an additional function argument (not applicable to operator overloads), as a return type (not applicable to constructors and destructors), or as a class template or function template parameter.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Its implementation is quite simple, with a specialized version when &lt;strong&gt;B == true&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;B,&lt;/span&gt; &lt;span style=&#34;color: #cdcd00&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color: #00cdcd&#34;&gt;T&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;enable_if&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{};&lt;/span&gt;
+
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color: #00cdcd&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;enable_if&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cd00cd&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color: #cdcd00&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;type;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;usually the second argument is default to void( T = void, as this template is a specialized version of the above one, it will still take the &lt;strong&gt;void&lt;/strong&gt; as default), unless you need enable_if::type as a return type.&lt;/p&gt;
+
+&lt;p&gt;example is taken from &lt;a href=&#34;http://www.cplusplus.com/reference/type_traits/enable_if/&#34;&gt;http://www.cplusplus.com/reference/type_traits/enable_if/&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #000080&#34;&gt;// enable_if example: two ways of using enable_if&lt;/span&gt;
+&lt;span style=&#34;color: #000080&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color: #000080&#34;&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color: #000080&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color: #000080&#34;&gt;&amp;lt;type_traits&amp;gt;&lt;/span&gt;
+
+&lt;span style=&#34;color: #000080&#34;&gt;// 1. the return type (bool) is only valid if T is an integral type:&lt;/span&gt;
+&lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color: #00cdcd&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color: #cdcd00&#34;&gt;typename&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;enable_if&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;is_integral&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;value,&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;bool&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;type&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;is_odd&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;(T&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;i)&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;bool&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;(i&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color: #cd00cd&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;);}&lt;/span&gt;
+
+&lt;span style=&#34;color: #000080&#34;&gt;// 2. the second template argument is only valid if T is an integral type:&lt;/span&gt;
+&lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cdcd00&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color: #00cdcd&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;,&lt;/span&gt;
+           &lt;span style=&#34;color: #cdcd00&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color: #cccccc; border: 1px solid #FF0000&#34;&gt;= &lt;/span&gt;&lt;span style=&#34;color: #00cdcd&#34;&gt;typename&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;enable_if&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;is_integral&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color: #00cd00&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;is_even&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;(T&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;i)&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;bool&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;(i&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color: #cd00cd&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;);}&lt;/span&gt;
+
+&lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;main()&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;{&lt;/span&gt;
+
+  &lt;span style=&#34;color: #00cd00&#34;&gt;short&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #cd00cd&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;;&lt;/span&gt;    &lt;span style=&#34;color: #000080&#34;&gt;// code does not compile if type of i is not integral&lt;/span&gt;
+
+  &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;cout&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;boolalpha;&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;cout&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cd0000&#34;&gt;&amp;quot;i is odd: &amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;is_odd(i)&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;endl;&lt;/span&gt;
+  &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;cout&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cd0000&#34;&gt;&amp;quot;i is even: &amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;is_even(i)&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;std&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;endl;&lt;/span&gt;
+
+  &lt;span style=&#34;color: #cdcd00&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #cd00cd&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color: #cccccc&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+</description>
+    </item>
+    
+    <item>
+      <title>hidraw</title>
+      <link>https://tenderleo.github.io/post/hidraw/</link>
+      <pubDate>Sat, 25 Feb 2017 17:14:15 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/hidraw/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>type_deduction</title>
+      <link>https://tenderleo.github.io/post/type_deduction/</link>
+      <pubDate>Thu, 23 Feb 2017 00:25:06 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/type_deduction/</guid>
+      <description>
+
+&lt;p&gt;the code used to illustrate how type deduction work for template.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;template&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color: #cdcd00&#34;&gt;typename&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;T&lt;/span&gt;&lt;span style=&#34;color: #3399cc&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color: #00cd00&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;f(ParamType&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;param);&lt;/span&gt;
+
+&lt;span style=&#34;color: #00cd00&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;f(expr)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&#34;paramtype-is-a-pointer-reference-type-but-not-universal-reference&#34;&gt;ParamType is a pointer/reference type, but not universal reference.&lt;/h4&gt;
+
+&lt;h4 id=&#34;paramtype-is-a-universal-reference&#34;&gt;ParamType is a universal reference.&lt;/h4&gt;
+
+&lt;h4 id=&#34;paramtype-is-neither-a-pointer-nor-a-reference&#34;&gt;ParamType is neither a pointer nor a reference.&lt;/h4&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>new enum type</title>
+      <link>https://tenderleo.github.io/post/new_enum_type/</link>
+      <pubDate>Wed, 22 Feb 2017 23:30:34 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/new_enum_type/</guid>
+      <description>
+
+&lt;p&gt;what is wrong with C++98 enums ?&lt;/p&gt;
+
+&lt;h4 id=&#34;enumerators-have-global-visibility&#34;&gt;enumerators have global visibility&lt;/h4&gt;
+
+&lt;h4 id=&#34;implicit-conversion&#34;&gt;implicit conversion&lt;/h4&gt;
+
+&lt;h4 id=&#34;value-type-varies&#34;&gt;value type varies&lt;/h4&gt;
+
+&lt;p&gt;Benefits from C++11 enums&lt;/p&gt;
+
+&lt;h4 id=&#34;scoped-enumerators-name&#34;&gt;scoped enumerators name.&lt;/h4&gt;
+
+&lt;h4 id=&#34;strong-types&#34;&gt;strong types&lt;/h4&gt;
+
+&lt;h4 id=&#34;designated-value-type&#34;&gt;designated value type&lt;/h4&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>string literal type</title>
+      <link>https://tenderleo.github.io/post/string_literal_type/</link>
+      <pubDate>Wed, 22 Feb 2017 20:20:37 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/string_literal_type/</guid>
+      <description>&lt;p&gt;&lt;code&gt;String literal&lt;/code&gt; in c++ is of type const array of char. so the following&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #00cd00&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #cd0000&#34;&gt;&amp;quot;random string&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;compiler will report&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;warning: conversion from string literal to &amp;lsquo;char *&amp;rsquo; is deprecated&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>constexpr</title>
+      <link>https://tenderleo.github.io/post/constexpr/</link>
+      <pubDate>Tue, 21 Feb 2017 08:30:56 -0800</pubDate>
+      
+      <guid>https://tenderleo.github.io/post/constexpr/</guid>
+      <description>
+
+&lt;p&gt;[7.1.5] the constexpr specifier&lt;/p&gt;
+
+&lt;h4 id=&#34;compile-time-initialization&#34;&gt;Compile-time initialization&lt;/h4&gt;
+
+&lt;p&gt;At machine code level, a variable defines a memory address, and it will always
+have value at that address, before any user code starts running, the storage for
+compile-time initialized variable is loaded/laid out with the computed value.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #cd00cd&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color: #cd00cd&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color: #3399cc&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color: #cd00cd&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;instead of generating machine code that sums up &lt;strong&gt;1+2+3&lt;/strong&gt; and assign the result to &lt;strong&gt;x&lt;/strong&gt;,compiler can compute the result and bind it to &lt;strong&gt;x&lt;/strong&gt; at compile time.&lt;/p&gt;
+
+&lt;p&gt;compile-time initialization may also apply to expression like &lt;code&gt;int x = getX()&lt;/code&gt;, compiler will try to inline the function call, and skip machine code generation if possible.&lt;/p&gt;
+
+&lt;p&gt;a run-of-the-mill compiler will do as much as possible to optimize your runtime
+performance,&lt;/p&gt;
+
+&lt;p&gt;compile time initialization&lt;/p&gt;
+
+&lt;p&gt;constant initialization.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.stderr.nl/Blog/Software/Cpp/ConstantInitialization.html&#34;&gt;http://www.stderr.nl/Blog/Software/Cpp/ConstantInitialization.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>initializer[dcl.init]</title>
@@ -15,7 +256,9 @@
       <pubDate>Mon, 20 Feb 2017 23:15:01 -0800</pubDate>
       
       <guid>https://tenderleo.github.io/post/braced_initialization/</guid>
-      <description>&lt;p&gt;&lt;b&gt;According&lt;/b&gt; [8.2], C++&amp;rsquo;s resolution policy will prefer to consider any construct
+      <description>
+
+&lt;p&gt;&lt;b&gt;According&lt;/b&gt; [8.2], C++&amp;rsquo;s resolution policy will prefer to consider any construct
 that could possibly be a declaration a declaration. thus the following statement&lt;/p&gt;
 &lt;div class=&#34;highlight&#34; style=&#34;background: #000000&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span style=&#34;color: #cccccc&#34;&gt;Object&lt;/span&gt; &lt;span style=&#34;color: #cccccc&#34;&gt;object(&lt;/span&gt;&lt;span style=&#34;color: #00cd00&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #cccccc&#34;&gt;());&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -23,14 +266,20 @@ that could possibly be a declaration a declaration. thus the following statement
 &lt;p&gt;will be consider a function declaration, instead of creating a new object, even the
 code intends to create one. This is so-called &lt;code&gt;C++&#39;s most vexing parsing&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;h4&gt;Initializer syntax&lt;/h4&gt;
-&lt;b&gt;Variables&lt;/b&gt; can be initialized using&lt;/p&gt;
+&lt;h3 id=&#34;initializer-syntax&#34;&gt;Initializer syntax&lt;/h3&gt;
+
+&lt;p&gt;&lt;b&gt;Variables&lt;/b&gt; can be initialized using&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;b&gt;{}&lt;/b&gt;, braces, or &lt;b&gt;= {}&lt;/b&gt;, equal braces&lt;/li&gt;
 &lt;li&gt;&lt;b&gt;()&lt;/b&gt;, parentheses&lt;/li&gt;
 &lt;li&gt;&lt;b&gt;=&lt;/b&gt;, equal sign&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h3 id=&#34;and-std-initializer-list&#34;&gt;{} and std::initializer_list&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;{}&lt;/strong&gt; binds to &lt;strong&gt;std::initializer_list&lt;/strong&gt; strongly that it will supersede any other
+forms overloaded methods if implicit conversion applicable, even if the non initializer_list version overload maybe more suitable for the given parameters, compiler will still implicitly convert parameters to the type which initializer_list holds, and call the &lt;strong&gt;std::initializer_list&lt;/strong&gt; version.&lt;/p&gt;
 </description>
     </item>
     

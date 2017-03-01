@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.18.1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://tenderleo.github.io/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="https://tenderleo.github.io/index.xml" type="application/rss+xml" title="">
+<title>your own printf - </title>
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <span class="base05">[</span><span class="base08">t</span><span class="base09">e</span><span class="base0a">n</span>.
+    <span class="base0b">d</span><span class="base0c">e</span><span class="base0d">r</span><span class="base0f">l</span>.
+    <span class="base0d">e</span><span class="base0e">0</span><span class="base05">]</span>
+  </div>
+  
+</header>
+
+<div class="container">
+
+
+<main role="main" class="article">
+  
+<article class="single" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-27">February 27, 2017</time></span>
+
+
+
+  </div>
+  <h1 class="headline" itemprop="headline">your own printf</h1>
+  <section class="body" itemprop="articleBody">
+    
+
+<h4 id="library-to-build-printf">library to build printf</h4>
+
+<p><code>printf</code> using several function defined inside <strong>stdarg.h</strong> to build a string on
+stack, interleaving the string format with your data.</p>
+<div class="highlight" style="background: #000000"><pre style="line-height: 125%"><span></span><span style="color: #cccccc">__printf(</span><span style="color: #cdcd00">const</span> <span style="color: #00cd00">char</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">format,</span> <span style="color: #cccccc">...)</span>
+<span style="color: #cccccc">{</span>
+  <span style="color: #00cd00">va_list</span> <span style="color: #cccccc">arg;</span>
+  <span style="color: #00cd00">int</span> <span style="color: #cccccc">done;</span>
+  <span style="color: #cccccc">va_start(arg,</span> <span style="color: #cccccc">format);</span>
+  <span style="color: #cccccc">done</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">vfprintf(stdout,</span> <span style="color: #cccccc">format,</span> <span style="color: #cccccc">arg);</span>
+  <span style="color: #cccccc">va_end(list);</span>
+  <span style="color: #cdcd00">return</span> <span style="color: #cccccc">done;</span>
+<span style="color: #cccccc">}</span>
+</pre></div>
+
+<h5 id="va-list">va_list</h5>
+
+<p>the object will hold the list of additional arguments of the function. it will be
+empty until you initialize it with va_start.</p>
+
+<h5 id="va-start-typename-format">va_start(typename format, &hellip;)</h5>
+
+<p>va_start initializes an object of this type in such a way that subsequent calls
+to va_arg sequentially retrieve the additional arguments passed to the function.</p>
+
+<p>the argument before the variadic arguments starts will function at flag to tell
+va_start after the argument, the argument list start. it can be a format string
+as for <code>printf</code>, or if the arguments are all the same, use count as the argument
+to indicate size of the list.</p>
+
+<h5 id="va-arg">va_arg</h5>
+
+<p>this function require type of the indexed argument to be specified.</p>
+
+<h5 id="va-end">va_end</h5>
+
+<p>after done with va_list object, you need call va_end to pair with va_start.</p>
+
+<h4 id="print-into-file-string">print into file/string.</h4>
+
+<p>vfprintf vsprintf</p>
+
+  </section>
+</article>
+
+</main>
+
+
+</div>
+
+<footer>
+  <div class="container">
+    <span class="copyright">&copy; 2017   - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+

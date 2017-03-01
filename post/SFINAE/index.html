@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="generator" content="Hugo 0.18.1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://tenderleo.github.io/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="https://tenderleo.github.io/index.xml" type="application/rss+xml" title="">
+<title>SFINAE and std::enable_if - </title>
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <span class="base05">[</span><span class="base08">t</span><span class="base09">e</span><span class="base0a">n</span>.
+    <span class="base0b">d</span><span class="base0c">e</span><span class="base0d">r</span><span class="base0f">l</span>.
+    <span class="base0d">e</span><span class="base0e">0</span><span class="base05">]</span>
+  </div>
+  
+</header>
+
+<div class="container">
+
+
+<main role="main" class="article">
+  
+<article class="single" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-25">February 25, 2017</time></span>
+
+
+    <span class="key">in</span>
+    <span class="val">
+
+        <a href="https://tenderleo.github.io/categories/development">Development</a>
+
+        <a href="https://tenderleo.github.io/categories/golang">GoLang</a>
+
+    </span>
+
+
+    <br>
+    <span class="key">tags:</span>
+    <span class="val">
+
+        <a href="https://tenderleo.github.io/tags/development">Development</a>
+
+        <a href="https://tenderleo.github.io/tags/golang">golang</a>
+
+    </span>
+
+  </div>
+  <h1 class="headline" itemprop="headline">SFINAE and std::enable_if</h1>
+  <section class="body" itemprop="articleBody">
+    
+
+<h4 id="sfinae">SFINAE</h4>
+
+<p>SFINAE is language feature/idiom short for <code>Substitution failure is not an error.</code></p>
+
+<p>In the process of template argument deduction, C++ compiler will try its best to initiate signatures of candidate overloaded function to make sure it finds the best/exact overloaded one function signature.</p>
+
+<p>In this process, if an invalid argument/return type is formed, this instantiation is removed from the resolution result set. As long as there is at least one instantiation instance exists in the resolution set, the compiler won&rsquo;t fail the compiling process.</p>
+<div class="highlight" style="background: #000000"><pre style="line-height: 125%"><span></span>  <span style="color: #00cd00">long</span> <span style="color: #cccccc">multiply(</span><span style="color: #00cd00">int</span> <span style="color: #cccccc">x,</span> <span style="color: #00cd00">int</span> <span style="color: #cccccc">y)</span> <span style="color: #cccccc">{</span> <span style="color: #cdcd00">return</span> <span style="color: #cccccc">x</span> <span style="color: #3399cc">+</span> <span style="color: #cccccc">y;}</span>
+  <span style="color: #cdcd00">template</span> <span style="color: #3399cc">&lt;</span><span style="color: #cdcd00">typename</span> <span style="color: #cccccc">T</span><span style="color: #3399cc">&gt;</span>
+  <span style="color: #cdcd00">typename</span> <span style="color: #cccccc">T</span><span style="color: #3399cc">::</span><span style="color: #cccccc">result</span> <span style="color: #cccccc">multiply(T</span><span style="color: #3399cc">&amp;</span> <span style="color: #cccccc">t1,</span> <span style="color: #cccccc">T</span><span style="color: #3399cc">&amp;</span> <span style="color: #cccccc">t2)</span> <span style="color: #cccccc">{</span>
+    <span style="color: #cdcd00">return</span> <span style="color: #cccccc">t1</span> <span style="color: #3399cc">+</span> <span style="color: #cccccc">t2;</span>
+  <span style="color: #cccccc">}</span>
+
+  <span style="color: #00cd00">int</span> <span style="color: #cccccc">main</span> <span style="color: #cccccc">()</span> <span style="color: #cccccc">{</span>
+
+    <span style="color: #cccccc">multiply(</span><span style="color: #cd00cd">5</span><span style="color: #cccccc">,</span> <span style="color: #cd00cd">5</span><span style="color: #cccccc">);</span>
+  <span style="color: #cccccc">}</span>
+</pre></div>
+
+<p>in the above code, it is clear that first overload of <code>multiply</code> is a perfect match for this resolution process, however, the compiler will still try to instantiate the second function template to make sure a better match exists or not. in this case, there is no such <code>int::result</code> defined, therefore template instantiation failed to carry out any result. <strong>SFINAE</strong> is used to determine properties of types at compile-time.</p>
+
+<h4 id="std-enable-if">std::enable_if</h4>
+
+<p>Its definition looks like:</p>
+<div class="highlight" style="background: #000000"><pre style="line-height: 125%"><span></span>  <span style="color: #cdcd00">template</span><span style="color: #3399cc">&lt;</span><span style="color: #00cd00">bool</span> <span style="color: #cccccc">B,</span> <span style="color: #cdcd00">class</span> <span style="color: #00cdcd">T</span> <span style="color: #3399cc">=</span> <span style="color: #00cd00">void</span><span style="color: #3399cc">&gt;</span>
+  <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">enable_if;</span>
+</pre></div>
+
+<blockquote>
+<p>std::enable_if has a public member typedef type, equal to T; otherwise, there is no member typedef.</p>
+
+<p>This metafunction is a convenient way to leverage <code>SFINAE</code> to conditionally remove functions from overload resolution based on type traits and to provide separate function overloads and specializations for different type traits. std::enable_if can be used as an additional function argument (not applicable to operator overloads), as a return type (not applicable to constructors and destructors), or as a class template or function template parameter.</p>
+</blockquote>
+
+<p>Its implementation is quite simple, with a specialized version when <strong>B == true</strong></p>
+<div class="highlight" style="background: #000000"><pre style="line-height: 125%"><span></span>  <span style="color: #cdcd00">template</span><span style="color: #3399cc">&lt;</span><span style="color: #00cd00">bool</span> <span style="color: #cccccc">B,</span> <span style="color: #cdcd00">class</span> <span style="color: #00cdcd">T</span> <span style="color: #3399cc">=</span> <span style="color: #00cd00">void</span><span style="color: #3399cc">&gt;</span>
+  <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">enable_if</span> <span style="color: #cccccc">{};</span>
+
+  <span style="color: #cdcd00">template</span><span style="color: #3399cc">&lt;</span><span style="color: #cdcd00">class</span> <span style="color: #00cdcd">T</span><span style="color: #3399cc">&gt;</span>
+  <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">enable_if</span><span style="color: #3399cc">&lt;</span><span style="color: #cd00cd">true</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">T</span><span style="color: #3399cc">&gt;</span> <span style="color: #cccccc">{</span> <span style="color: #cdcd00">typedef</span> <span style="color: #cccccc">T</span> <span style="color: #cccccc">type;</span> <span style="color: #cccccc">};</span>
+</pre></div>
+
+<p>usually the second argument is default to void( T = void, as this template is a specialized version of the above one, it will still take the <strong>void</strong> as default), unless you need enable_if::type as a return type.</p>
+
+<p>example is taken from <a href="http://www.cplusplus.com/reference/type_traits/enable_if/">http://www.cplusplus.com/reference/type_traits/enable_if/</a></p>
+
+<div class="highlight" style="background: #000000"><pre style="line-height: 125%"><span></span><span style="color: #000080">// enable_if example: two ways of using enable_if</span>
+<span style="color: #000080">#include</span> <span style="color: #000080">&lt;iostream&gt;</span>
+<span style="color: #000080">#include</span> <span style="color: #000080">&lt;type_traits&gt;</span>
+
+<span style="color: #000080">// 1. the return type (bool) is only valid if T is an integral type:</span>
+<span style="color: #cdcd00">template</span> <span style="color: #3399cc">&lt;</span><span style="color: #cdcd00">class</span> <span style="color: #00cdcd">T</span><span style="color: #3399cc">&gt;</span>
+<span style="color: #cdcd00">typename</span> <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">enable_if</span><span style="color: #3399cc">&lt;</span><span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">is_integral</span><span style="color: #3399cc">&lt;</span><span style="color: #cccccc">T</span><span style="color: #3399cc">&gt;::</span><span style="color: #cccccc">value,</span><span style="color: #00cd00">bool</span><span style="color: #3399cc">&gt;::</span><span style="color: #cccccc">type</span>
+  <span style="color: #cccccc">is_odd</span> <span style="color: #cccccc">(T</span> <span style="color: #cccccc">i)</span> <span style="color: #cccccc">{</span><span style="color: #cdcd00">return</span> <span style="color: #00cd00">bool</span><span style="color: #cccccc">(i</span><span style="color: #3399cc">%</span><span style="color: #cd00cd">2</span><span style="color: #cccccc">);}</span>
+
+<span style="color: #000080">// 2. the second template argument is only valid if T is an integral type:</span>
+<span style="color: #cdcd00">template</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cdcd00">class</span> <span style="color: #00cdcd">T</span><span style="color: #cccccc">,</span>
+           <span style="color: #cdcd00">class</span> <span style="color: #cccccc; border: 1px solid #FF0000">= </span><span style="color: #00cdcd">typename</span> <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">enable_if</span><span style="color: #3399cc">&lt;</span><span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">is_integral</span><span style="color: #3399cc">&lt;</span><span style="color: #cccccc">T</span><span style="color: #3399cc">&gt;::</span><span style="color: #cccccc">value</span><span style="color: #3399cc">&gt;::</span><span style="color: #cccccc">type</span><span style="color: #3399cc">&gt;</span>
+<span style="color: #00cd00">bool</span> <span style="color: #cccccc">is_even</span> <span style="color: #cccccc">(T</span> <span style="color: #cccccc">i)</span> <span style="color: #cccccc">{</span><span style="color: #cdcd00">return</span> <span style="color: #3399cc">!</span><span style="color: #00cd00">bool</span><span style="color: #cccccc">(i</span><span style="color: #3399cc">%</span><span style="color: #cd00cd">2</span><span style="color: #cccccc">);}</span>
+
+<span style="color: #00cd00">int</span> <span style="color: #cccccc">main()</span> <span style="color: #cccccc">{</span>
+
+  <span style="color: #00cd00">short</span> <span style="color: #00cd00">int</span> <span style="color: #cccccc">i</span> <span style="color: #3399cc">=</span> <span style="color: #cd00cd">1</span><span style="color: #cccccc">;</span>    <span style="color: #000080">// code does not compile if type of i is not integral</span>
+
+  <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">cout</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">boolalpha;</span>
+  <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">cout</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cd0000">&quot;i is odd: &quot;</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cccccc">is_odd(i)</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">endl;</span>
+  <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">cout</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cd0000">&quot;i is even: &quot;</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cccccc">is_even(i)</span> <span style="color: #3399cc">&lt;&lt;</span> <span style="color: #cccccc">std</span><span style="color: #3399cc">::</span><span style="color: #cccccc">endl;</span>
+
+  <span style="color: #cdcd00">return</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">;</span>
+<span style="color: #cccccc">}</span>
+</pre></div>
+
+
+  </section>
+</article>
+
+</main>
+
+
+</div>
+
+<footer>
+  <div class="container">
+    <span class="copyright">&copy; 2017   - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+

@@ -30,6 +30,71 @@
   
     
 <article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/SFINAE/">SFINAE and std::enable_if</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-25">February 25, 2017</time></span>
+
+  </div>
+  <section class="summary">
+    SFINAE SFINAE is language feature/idiom short for Substitution failure is not an error.
+In the process of template argument deduction, C++ compiler will try its best to initiate signatures of candidate overloaded function to make sure it finds the best/exact overloaded one function signature.
+In this process, if an invalid argument/return type is formed, this instantiation is removed from the resolution result set. As long as there is at least one instantiation instance exists in the resolution set, the compiler won&rsquo;t fail the compiling process.  <a href="/post/SFINAE/">Read More...</a>
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/hidraw/">hidraw</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-25">February 25, 2017</time></span>
+
+  </div>
+  <section class="summary">
+     
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/type_deduction/">type_deduction</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-23">February 23, 2017</time></span>
+
+  </div>
+  <section class="summary">
+     the code used to illustrate how type deduction work for template.
+template&lt;typename T&gt; void f(ParamType param); void f(expr)  ParamType is a pointer/reference type, but not universal reference. ParamType is a universal reference. ParamType is neither a pointer nor a reference.  
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/constexpr/">constexpr</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-21">February 21, 2017</time></span>
+
+  </div>
+  <section class="summary">
+    [7.1.5] the constexpr specifier
+Compile-time initialization At machine code level, a variable defines a memory address, and it will always have value at that address, before any user code starts running, the storage for compile-time initialized variable is loaded/laid out with the computed value.
+ int x = 1 + 2 + 3;  instead of generating machine code that sums up 1+2+3 and assign the result to x,compiler can compute the result and bind it to x at compile time.  <a href="/post/constexpr/">Read More...</a>
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
   <h2 class="headline" itemprop="headline"><a href="/post/my2nd/">my2nd</a></h2>
   <div class="meta">
 

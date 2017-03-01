@@ -41,7 +41,7 @@
     According [8.2], C++&rsquo;s resolution policy will prefer to consider any construct that could possibly be a declaration a declaration. thus the following statement
  Object object(int());  will be consider a function declaration, instead of creating a new object, even the code intends to create one. This is so-called C++'s most vexing parsing
 Initializer syntax Variables can be initialized using
- {}, braces, or = {}, equal braces (), parentheses =, equal sign   
+ {}, braces, or = {}, equal braces (), parentheses =, equal sign  {} and std::initializer_list {} binds to std::initializer_list strongly that it will supersede any other forms overloaded methods if implicit conversion applicable, even if the non initializer_list version overload maybe more suitable for the given parameters, compiler will still implicitly convert parameters to the type which initializer_list holds, and call the std::initializer_list version.  <a href="/post/braced_initialization/">Read More...</a>
   </section>
 </article>
 

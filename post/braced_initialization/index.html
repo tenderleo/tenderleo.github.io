@@ -46,7 +46,9 @@
   </div>
   <h1 class="headline" itemprop="headline">initializer[dcl.init]</h1>
   <section class="body" itemprop="articleBody">
-    <p><b>According</b> [8.2], C++&rsquo;s resolution policy will prefer to consider any construct
+    
+
+<p><b>According</b> [8.2], C++&rsquo;s resolution policy will prefer to consider any construct
 that could possibly be a declaration a declaration. thus the following statement</p>
 <div class="highlight" style="background: #000000"><pre style="line-height: 125%"><span></span>  <span style="color: #cccccc">Object</span> <span style="color: #cccccc">object(</span><span style="color: #00cd00">int</span><span style="color: #cccccc">());</span>
 </pre></div>
@@ -54,14 +56,20 @@ that could possibly be a declaration a declaration. thus the following statement
 <p>will be consider a function declaration, instead of creating a new object, even the
 code intends to create one. This is so-called <code>C++'s most vexing parsing</code></p>
 
-<p><h4>Initializer syntax</h4>
-<b>Variables</b> can be initialized using</p>
+<h3 id="initializer-syntax">Initializer syntax</h3>
+
+<p><b>Variables</b> can be initialized using</p>
 
 <ul>
 <li><b>{}</b>, braces, or <b>= {}</b>, equal braces</li>
 <li><b>()</b>, parentheses</li>
 <li><b>=</b>, equal sign</li>
 </ul>
+
+<h3 id="and-std-initializer-list">{} and std::initializer_list</h3>
+
+<p><strong>{}</strong> binds to <strong>std::initializer_list</strong> strongly that it will supersede any other
+forms overloaded methods if implicit conversion applicable, even if the non initializer_list version overload maybe more suitable for the given parameters, compiler will still implicitly convert parameters to the type which initializer_list holds, and call the <strong>std::initializer_list</strong> version.</p>
 
   </section>
 </article>

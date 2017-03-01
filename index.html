@@ -43,48 +43,49 @@
     
       
 <article class="list-item" itemscope itemtype="http://schema.org/Blog">
-  <h2 class="headline" itemprop="headline"><a href="/post/braced_initialization/">initializer[dcl.init]</a></h2>
+  <h2 class="headline" itemprop="headline"><a href="/post/printf/">your own printf</a></h2>
   <div class="meta">
 
     <span class="key">published on</span>
-    <span class="val"><time itemprop="datePublished" datetime="2017-02-20">February 20, 2017</time></span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-27">February 27, 2017</time></span>
 
   </div>
   <section class="summary">
-    According [8.2], C++&rsquo;s resolution policy will prefer to consider any construct that could possibly be a declaration a declaration. thus the following statement
- Object object(int());  will be consider a function declaration, instead of creating a new object, even the code intends to create one. This is so-called C++'s most vexing parsing
-Initializer syntax Variables can be initialized using
- {}, braces, or = {}, equal braces (), parentheses =, equal sign   
+    library to build printf printf using several function defined inside stdarg.h to build a string on stack, interleaving the string format with your data.
+__printf(const char *format, ...) { va_list arg; int done; va_start(arg, format); done = vfprintf(stdout, format, arg); va_end(list); return done; }  va_list the object will hold the list of additional arguments of the function. it will be empty until you initialize it with va_start.
+va_start(typename format, &hellip;) va_start initializes an object of this type in such a way that subsequent calls to va_arg sequentially retrieve the additional arguments passed to the function.  <a href="/post/printf/">Read More...</a>
   </section>
 </article>
 
     
       
 <article class="list-item" itemscope itemtype="http://schema.org/Blog">
-  <h2 class="headline" itemprop="headline"><a href="/post/my2nd/">my2nd</a></h2>
+  <h2 class="headline" itemprop="headline"><a href="/post/SFINAE/">SFINAE and std::enable_if</a></h2>
   <div class="meta">
 
     <span class="key">published on</span>
-    <span class="val"><time itemprop="datePublished" datetime="2017-02-18">February 18, 2017</time></span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-25">February 25, 2017</time></span>
+
+  </div>
+  <section class="summary">
+    SFINAE SFINAE is language feature/idiom short for Substitution failure is not an error.
+In the process of template argument deduction, C++ compiler will try its best to initiate signatures of candidate overloaded function to make sure it finds the best/exact overloaded one function signature.
+In this process, if an invalid argument/return type is formed, this instantiation is removed from the resolution result set. As long as there is at least one instantiation instance exists in the resolution set, the compiler won&rsquo;t fail the compiling process.  <a href="/post/SFINAE/">Read More...</a>
+  </section>
+</article>
+
+    
+      
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/hidraw/">hidraw</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-02-25">February 25, 2017</time></span>
 
   </div>
   <section class="summary">
      
-  </section>
-</article>
-
-    
-      
-<article class="list-item" itemscope itemtype="http://schema.org/Blog">
-  <h2 class="headline" itemprop="headline"><a href="/post/welcome/">welcome</a></h2>
-  <div class="meta">
-
-    <span class="key">published on</span>
-    <span class="val"><time itemprop="datePublished" datetime="2017-02-17">February 17, 2017</time></span>
-
-  </div>
-  <section class="summary">
-     class this-&gt;  1  #include &lt;iostream&gt; 2  using namespace std; 3  4  class Object { 5  struct name{ 6  7  }; 8  9  }; 10  11  int main(){ 12  std::vector&lt;std::string&gt; names = new std::vector&lt;std::string&gt;(); 13  return 0; 14  }   
   </section>
 </article>
 
@@ -104,12 +105,12 @@ Initializer syntax Variables can be initialized using
     
     <h2 class="category">
       <a href="https://tenderleo.github.io/categories/development">Development</a>
-      <small>(1)</small>
+      <small>(5)</small>
     </h2>
     
     <h2 class="category">
       <a href="https://tenderleo.github.io/categories/golang">Golang</a>
-      <small>(1)</small>
+      <small>(5)</small>
     </h2>
     
   </section>
@@ -124,12 +125,12 @@ Initializer syntax Variables can be initialized using
     
     <span class="tag">
       <a href="https://tenderleo.github.io/tags/development">development</a>
-      <small>(1)</small>
+      <small>(5)</small>
     </span>
     
     <span class="tag">
       <a href="https://tenderleo.github.io/tags/golang">golang</a>
-      <small>(1)</small>
+      <small>(5)</small>
     </span>
     
   </section>
